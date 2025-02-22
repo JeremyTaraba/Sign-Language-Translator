@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "495452649430",
+    "project_id": "hand-translator-a6b9f",
+    "storage_bucket": "hand-translator-a6b9f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495452649430:android:fd0667d3c83f5620419677",
+        "android_client_info": {
+          "package_name": "com.example.sign_language_trasnlator2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDanaxcZxHguz1GUJXQmYrCsYKo2uY3hjU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
