@@ -4,9 +4,9 @@ import 'package:sign_language_trasnlator2/utility/bottom_nav.dart';
 
 class HistoryPage extends StatelessWidget {
   final List<Map<String, String>> textHistory = [
-    // {'date': '9/26', 'message': 'Hi, how are you?'},
-    // {'date': '9/25', 'message': 'Goodbye'},
-    // {'date': '9/24', 'message': 'Goodbye'},
+    {'date': '9/26', 'message': 'Hi, how are you?'},
+    {'date': '9/25', 'message': 'Goodbye'},
+    {'date': '9/24', 'message': 'Goodbye'},
     //Messages goes here
   ];
 
