@@ -37,12 +37,18 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void checkLogin() async {
+    setState(() {
+      showSpinner = true;
+    });
     LoginCredentials creds = await retrieveLoginCredentials();
     if (creds.username != "") {
       try {
         final user = await _auth.signInWithEmailAndPassword(
             email: creds.username, password: creds.password);
         if (user == null) {
+          setState(() {
+            showSpinner = false;
+          });
           return;
         }
         user_Info_Name = await getCurrentUsername();
@@ -52,6 +58,9 @@ class _RegisterPageState extends State<RegisterPage> {
         mySnackBar(e.toString().split(']')[1], context);
       }
     }
+    setState(() {
+      showSpinner = false;
+    });
   }
 
   @override

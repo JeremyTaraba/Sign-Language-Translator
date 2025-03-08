@@ -22,7 +22,6 @@ class _LoginPageState extends State<LoginPage> {
   String password = "";
   final _auth = FirebaseAuth.instance;
   bool showSpinner = false;
-  bool loadedScreen = false;
 
   @override
   Widget build(BuildContext context) {
