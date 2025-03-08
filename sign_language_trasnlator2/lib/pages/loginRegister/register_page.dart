@@ -6,6 +6,8 @@ import 'package:sign_language_trasnlator2/utility/buttons.dart';
 import 'package:sign_language_trasnlator2/utility/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sign_language_trasnlator2/utility/firebase_info.dart';
+import 'package:sign_language_trasnlator2/utility/save_credentials.dart';
 import 'package:sign_language_trasnlator2/utility/snackbar.dart';
 import 'package:sign_language_trasnlator2/utility/user_info.dart';
 
@@ -27,6 +29,30 @@ class _RegisterPageState extends State<RegisterPage> {
   int checkInputFields = 0;
   final _formKey = GlobalKey<FormState>();
   bool showSpinner = false;
+
+  @override
+  void initState() {
+    super.initState();
+    checkLogin();
+  }
+
+  void checkLogin() async {
+    LoginCredentials creds = await retrieveLoginCredentials();
+    if (creds.username != "") {
+      try {
+        final user = await _auth.signInWithEmailAndPassword(
+            email: creds.username, password: creds.password);
+        if (user == null) {
+          return;
+        }
+        user_Info_Name = await getCurrentUsername();
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => HistoryPage()));
+      } catch (e) {
+        mySnackBar(e.toString().split(']')[1], context);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,7 +205,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               if (newUser != null) {
                                 //we got a newUser back
                                 await _firestore
-                                    .collection('profile_info')
+                                    .collection('users')
                                     .doc(email)
                                     .set({
                                   'name': name,

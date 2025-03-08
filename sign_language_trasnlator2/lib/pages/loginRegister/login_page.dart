@@ -6,6 +6,7 @@ import 'package:sign_language_trasnlator2/pages/loginRegister/register_page.dart
 import 'package:sign_language_trasnlator2/utility/buttons.dart';
 import 'package:sign_language_trasnlator2/utility/constants.dart';
 import 'package:sign_language_trasnlator2/utility/firebase_info.dart';
+import 'package:sign_language_trasnlator2/utility/save_credentials.dart';
 import 'package:sign_language_trasnlator2/utility/snackbar.dart';
 import 'package:sign_language_trasnlator2/utility/user_info.dart';
 
@@ -108,6 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                           }
 
                           user_Info_Name = await getCurrentUsername();
+                          saveLoginCredentials(email, password);
 
                           Navigator.push(
                               context,

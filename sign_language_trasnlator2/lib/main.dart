@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sign_language_trasnlator2/pages/camera/camera_page.dart';
 import 'package:sign_language_trasnlator2/pages/loginRegister/register_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';

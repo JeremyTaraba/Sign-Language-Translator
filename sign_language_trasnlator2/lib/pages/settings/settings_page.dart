@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sign_language_trasnlator2/utility/bottom_nav.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sign_language_trasnlator2/utility/firebase_info.dart';
+import 'package:sign_language_trasnlator2/utility/save_credentials.dart';
 import 'package:sign_language_trasnlator2/utility/user_info.dart';
 
 final _firestore = FirebaseFirestore.instance;
@@ -38,6 +39,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       child: ElevatedButton(
                           onPressed: () {
                             auth.signOut();
+                            deleteLoginCredentials();
                             Navigator.pop(context);
                           },
                           child: Text(
