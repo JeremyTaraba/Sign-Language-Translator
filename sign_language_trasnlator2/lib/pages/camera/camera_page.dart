@@ -12,12 +12,14 @@ class CameraPage extends StatefulWidget {
 class _CameraPageState extends State<CameraPage> {
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Column(
         children: [
           Container(
-            height: 400,
-            width: 400,
+            height: screenHeight * 2 / 3,
+            width: screenWidth,
             child: CameraAwesomeBuilder.awesome(
               saveConfig: SaveConfig.photoAndVideo(),
               onMediaTap: (mediaCapture) {
