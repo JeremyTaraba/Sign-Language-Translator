@@ -79,16 +79,30 @@ class _RegisterPageState extends State<RegisterPage> {
               Container(
                 decoration: const BoxDecoration(
                   color: Color.fromARGB(255, 240, 155, 94),
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    stops: [0.1, 0.3, 0.5],
+                    colors: [
+                      Color.fromARGB(255, 255, 112, 10),
+                      Color.fromARGB(255, 246, 177, 128),
+                      Color.fromARGB(255, 251, 189, 145),
+                    ],
+                  ),
                 ),
               ),
-              Positioned(
-                top: 50,
-                left: screenWidth / 2 - 90,
-                child: Text(
-                  "Register",
-                  style: TextStyle(
-                    fontSize: 45,
-                    fontWeight: FontWeight.bold,
+              Positioned.fill(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 30.0),
+                    child: Text(
+                      "Register",
+                      style: TextStyle(
+                        fontSize: 70,
+                        fontFamily: "Mogra",
+                      ),
+                    ),
                   ),
                 ),
               ),

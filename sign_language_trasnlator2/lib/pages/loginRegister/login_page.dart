@@ -28,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Container(
-      color: Colors.lightBlue,
+      color: Colors.deepOrangeAccent,
       child: ModalProgressHUD(
         inAsyncCall: showSpinner,
         child: Scaffold(
@@ -38,17 +38,31 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               Container(
                 decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 240, 155, 94),
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    stops: [0.1, 0.3, 0.5],
+                    colors: [
+                      Color.fromARGB(255, 252, 92, 23),
+                      Color.fromARGB(255, 255, 162, 122),
+                      Color.fromARGB(255, 255, 193, 166)
+                    ],
+                  ),
                 ),
               ),
-              Positioned(
-                top: 50,
-                left: screenWidth / 2 - 60,
-                child: Text(
-                  "Login",
-                  style: TextStyle(
-                    fontSize: 45,
-                    fontWeight: FontWeight.bold,
+              Positioned.fill(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 30.0),
+                    child: Text(
+                      "Login",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 70,
+                        fontFamily: "Mogra",
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -124,7 +138,11 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            mySnackBar(
+                                "Please email management team to reset your password",
+                                context);
+                          },
                           child: const Text(
                             "Forgot password?",
                             style: TextStyle(

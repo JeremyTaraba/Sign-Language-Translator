@@ -42,9 +42,20 @@ class _SettingsPageState extends State<SettingsPage> {
                             deleteLoginCredentials();
                             Navigator.pop(context);
                           },
-                          child: Text(
-                            "Logout",
-                            style: TextStyle(fontSize: 34),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 255, 255, 255),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 20,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Logout",
+                              style: TextStyle(
+                                  fontSize: 40, color: Colors.deepOrange),
+                            ),
                           )),
                     ),
                   )
@@ -81,12 +92,13 @@ class _SettingsPageState extends State<SettingsPage> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.deepOrangeAccent, width: 3),
+                border: Border.all(
+                    color: const Color.fromARGB(255, 95, 35, 15), width: 2),
               ),
               child: Center(
                 child: Text(
                   "$Data",
-                  style: TextStyle(fontSize: 24),
+                  style: TextStyle(fontSize: 24, overflow: TextOverflow.clip),
                 ),
               ),
             ),

@@ -15,6 +15,7 @@ class _CameraPageState extends State<CameraPage> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: Colors.orange[50],
       body: Column(
         children: [
           Container(

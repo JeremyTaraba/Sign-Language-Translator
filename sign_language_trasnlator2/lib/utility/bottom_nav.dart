@@ -32,7 +32,7 @@ class _BottomNavState extends State<BottomNav> {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       backgroundColor: Colors.white,
-      selectedItemColor: Colors.lightBlueAccent,
+      selectedItemColor: Colors.deepOrangeAccent,
       currentIndex: widget.selectedIndex,
       onTap: onItemTap,
       items: const [
