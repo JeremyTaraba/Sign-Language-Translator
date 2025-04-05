@@ -6,7 +6,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:sign_language_trasnlator2/utility/bottom_nav.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
-import 'package:image/image.dart' as imglib;
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});

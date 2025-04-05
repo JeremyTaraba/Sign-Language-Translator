@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sign_language_trasnlator2/pages/history/history_page.dart';
 import 'package:sign_language_trasnlator2/pages/settings/settings_page.dart';
-import 'package:sign_language_trasnlator2/pages/camera/camera_page.dart';
+import 'package:sign_language_trasnlator2/utility/camera_manager.dart';
+
+import '../pages/TestCamera/camera_page.dart';
 
 class BottomNav extends StatefulWidget {
   const BottomNav({required this.selectedIndex});
@@ -19,7 +21,10 @@ class _BottomNavState extends State<BottomNav> {
     }
     if (index == 1) {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => CameraPage()));
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  CameraPage(cameras: CameraManager.instance.cameras)));
     }
     if (index == 2) {
       Navigator.pushReplacement(
