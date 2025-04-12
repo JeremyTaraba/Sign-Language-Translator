@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:sign_language_trasnlator2/pages/TestCamera/camerascreen.dart';
-import 'package:tflite/tflite.dart';
+import 'package:sign_language_trasnlator2/pages/TestCamera/camerastream.dart';
 import 'package:camera/camera.dart';
 import 'package:google_mlkit_object_detection/google_mlkit_object_detection.dart';
+import 'package:sign_language_trasnlator2/utility/image_helper/image_classification_helper.dart';
+import 'package:tflite_flutter/tflite_flutter.dart';
+import 'package:image/image.dart' as img;
+import 'package:sign_language_trasnlator2/utility/bottom_nav.dart';
+import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 // trying to use google mlkit, will need to check the github examples
 // need to remove tflite from pubspec, it won't compile with it
 
@@ -15,27 +22,42 @@ class CameraPage extends StatefulWidget {
 
 class _CameraPageState extends State<CameraPage> {
   String predOne = '';
+  late final Interpreter interpreter;
+
+  late Tensor inputTensor;
+
+  late Tensor outputTensor;
+
+  late final List<String> labels;
+
+  img.Image? image;
+
+  final bool _isProcessing = false;
+
+  late Map<String, double> classification;
+
+  late ImageClassificationHelper imageClassificationHelper;
+
+  late List<String> topResults;
+  late List<MapEntry<String, double>> sortedResults;
+
+  late InputImage inputImage;
+
+  late ObjectDetector objectDetector;
 
   @override
   void initState() {
     super.initState();
-    loadTfliteModel();
   }
 
-  loadTfliteModel() async {
-    String? res;
-    res = await Tflite.loadModel(
-        model: "assets/model_unquant.tflite", labels: "assets/labels.txt");
-    print(res);
-  }
+  // createObjectDetector() {
+  //   final mode = DetectionMode.stream;
+  //   final options = ObjectDetectorOptions(
+  //       mode: mode, classifyObjects: true, multipleObjects: false);
+  //   objectDetector = ObjectDetector(options: options);
+  // }
 
-  setRecognitions(outputs) {
-    setState(() {
-      predOne = outputs[0]['label'];
-    });
-  }
-
-  void processImage(objectDetector, inputImage) async {
+  processImage() async {
     final List<DetectedObject> objects =
         await objectDetector.processImage(inputImage);
 
@@ -49,12 +71,24 @@ class _CameraPageState extends State<CameraPage> {
     }
   }
 
+  setRecognitions(outputs) {
+    setState(() {
+      predOne = outputs[0]['label'];
+    });
+  }
+
+  @override
+  void dispose() {
+    objectDetector.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final mode = DetectionMode.stream;
     final options = LocalObjectDetectorOptions(
         mode: mode,
-        modelPath: "assets/model_unquant.tflite",
+        modelPath: "assets/model.tflite",
         classifyObjects: true,
         multipleObjects: false);
     final objectDetector = ObjectDetector(options: options);
@@ -70,7 +104,7 @@ class _CameraPageState extends State<CameraPage> {
       ),
       body: Stack(
         children: [
-          Camera(widget.cameras, setRecognitions),
+          Camera(widget.cameras, setRecognitions, objectDetector),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -100,6 +134,9 @@ class _CameraPageState extends State<CameraPage> {
             ),
           )
         ],
+      ),
+      bottomNavigationBar: BottomNav(
+        selectedIndex: 0,
       ),
     );
   }

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:tflite/tflite.dart';
+import 'package:google_mlkit_object_detection/google_mlkit_object_detection.dart';
 
 typedef void Callback(List<dynamic> list);
 
 class Camera extends StatefulWidget {
   final List<CameraDescription> cameras;
   final Callback setRecognitions;
+  final ObjectDetector objectDetector;
 
-  Camera(this.cameras, this.setRecognitions);
+  Camera(this.cameras, this.setRecognitions, this.objectDetector);
   @override
   _CameraState createState() => _CameraState();
 }
@@ -16,6 +17,20 @@ class Camera extends StatefulWidget {
 class _CameraState extends State<Camera> {
   late CameraController cameraController;
   bool isDetecting = false;
+
+  processImage(objectDetector, inputImage) async {
+    final List<DetectedObject> objects =
+        await objectDetector.processImage(inputImage);
+
+    for (DetectedObject detectedObject in objects) {
+      final rect = detectedObject.boundingBox;
+      final trackingId = detectedObject.trackingId;
+
+      for (Label label in detectedObject.labels) {
+        print('${label.text} ${label.confidence}');
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -31,19 +46,20 @@ class _CameraState extends State<Camera> {
       cameraController.startImageStream((image) {
         if (!isDetecting) {
           isDetecting = true;
-          Tflite.runModelOnFrame(
-            bytesList: image.planes.map((plane) {
-              return plane.bytes;
-            }).toList(),
-            imageHeight: image.height,
-            imageWidth: image.width,
-            numResults: 1,
-          ).then((value) {
-            if (value!.isNotEmpty) {
-              widget.setRecognitions(value);
-              isDetecting = false;
-            }
-          });
+          processImage(widget.objectDetector, image);
+          // Tflite.runModelOnFrame(
+          //   bytesList: image.planes.map((plane) {
+          //     return plane.bytes;
+          //   }).toList(),
+          //   imageHeight: image.height,
+          //   imageWidth: image.width,
+          //   numResults: 1,
+          // ).then((value) {
+          //   if (value!.isNotEmpty) {
+          //     widget.setRecognitions(value);
+          //     isDetecting = false;
+          //   }
+          // });
         }
       });
     });
