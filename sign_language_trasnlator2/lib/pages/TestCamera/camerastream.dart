@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/services.dart';
 import 'package:google_mlkit_object_detection/google_mlkit_object_detection.dart';
 
 typedef void Callback(List<dynamic> list);
@@ -18,7 +21,40 @@ class _CameraState extends State<Camera> {
   late CameraController cameraController;
   bool isDetecting = false;
 
-  processImage(objectDetector, inputImage) async {
+  @override
+  void initState() {
+    super.initState();
+    _initCamera();
+  }
+
+  Future<void> _initCamera() async {
+    cameraController = CameraController(
+      widget.cameras.first,
+      enableAudio: false,
+      ResolutionPreset.medium,
+      imageFormatGroup: Platform.isAndroid
+          ? ImageFormatGroup.nv21 // for Android
+          : ImageFormatGroup.bgra8888, // for iOS
+    );
+    await cameraController.initialize();
+
+    await cameraController.startImageStream((image) {
+      if (!isDetecting) {
+        isDetecting = true;
+        final inputImage = inputImageFromCameraImage(
+            image, widget.cameras.first.sensorOrientation);
+        processImage(widget.objectDetector, inputImage);
+      }
+      Future.delayed(const Duration(milliseconds: 300)).then((_) {
+        isDetecting = false;
+      });
+    });
+    setState(() {});
+  }
+
+  processImage(ObjectDetector objectDetector, InputImage inputImage) async {
+    print("running processImage");
+
     final List<DetectedObject> objects =
         await objectDetector.processImage(inputImage);
 
@@ -32,37 +68,37 @@ class _CameraState extends State<Camera> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    cameraController =
-        CameraController(widget.cameras.first, ResolutionPreset.high);
-    cameraController.initialize().then((value) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
+  InputImage inputImageFromCameraImage(CameraImage image, int rotation) {
+    final WriteBuffer allBytes = WriteBuffer();
+    for (final plane in image.planes) {
+      allBytes.putUint8List(plane.bytes);
+    }
+    final bytes = allBytes.done().buffer.asUint8List();
 
-      cameraController.startImageStream((image) {
-        if (!isDetecting) {
-          isDetecting = true;
-          processImage(widget.objectDetector, image);
-          // Tflite.runModelOnFrame(
-          //   bytesList: image.planes.map((plane) {
-          //     return plane.bytes;
-          //   }).toList(),
-          //   imageHeight: image.height,
-          //   imageWidth: image.width,
-          //   numResults: 1,
-          // ).then((value) {
-          //   if (value!.isNotEmpty) {
-          //     widget.setRecognitions(value);
-          //     isDetecting = false;
-          //   }
-          // });
-        }
-      });
-    });
+    final Size imageSize = Size(
+      image.width.toDouble(),
+      image.height.toDouble(),
+    );
+
+    final imageRotation = InputImageRotationValue.fromRawValue(rotation) ??
+        InputImageRotation.rotation0deg;
+
+    // construct metadata
+    final metadata = InputImageMetadata(
+      size: imageSize,
+      rotation: imageRotation,
+      format: InputImageFormat.nv21,
+      bytesPerRow: image.planes.first.bytesPerRow,
+    );
+
+    print('format: ${image.format.raw}'); // should be 35
+    print('bytesPerRow: ${image.planes.first.bytesPerRow}');
+    print('rotation: $rotation');
+
+    return InputImage.fromBytes(
+      bytes: bytes,
+      metadata: metadata,
+    );
   }
 
   @override
@@ -76,10 +112,13 @@ class _CameraState extends State<Camera> {
     if (!cameraController.value.isInitialized) {
       return Container();
     }
+    double width = MediaQuery.sizeOf(context).width;
+    double height = MediaQuery.sizeOf(context).height;
 
-    return Transform.scale(
-      scale: 1 / cameraController.value.aspectRatio,
-      child: Center(
+    return Center(
+      child: SizedBox(
+        width: width,
+        height: height / 2,
         child: AspectRatio(
           aspectRatio: cameraController.value.aspectRatio,
           child: CameraPreview(cameraController),
