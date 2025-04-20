@@ -7,8 +7,11 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:tflite_flutter/tflite_flutter.dart';
+import 'package:tflite_flutter_helper_plus/tflite_flutter_helper_plus.dart';
 
-// make sure the tflite model is quantized or it wont work
+// model will not work with google ml kit, quantized or in float form, both don't work
+// will have to use tflite_flutter package instead, need to test it
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key, required this.cameras});
@@ -22,37 +25,56 @@ class _CameraPageState extends State<CameraPage> {
 
   late ObjectDetector objectDetector;
 
+  late Interpreter interpreter;
+  late ImageProcessor imageProcessor;
+  late TensorImage inputImage;
+
   @override
   void initState() {
     super.initState();
   }
 
-  Future<String> createObjectDetector() async {
-    print("starting creation");
-    final modelPath = await getModelPath('assets/model_unquant.tflite');
-    print("path got");
-    final options = LocalObjectDetectorOptions(
-      mode: DetectionMode.stream,
-      modelPath: modelPath,
-      classifyObjects: true,
-      multipleObjects: false,
-    );
+  Future<void> loadModel() async {
+    interpreter = await Interpreter.fromAsset('assets/model.tflite');
 
-    objectDetector = ObjectDetector(options: options);
-    print("detector made");
-    return objectDetector.id;
+    // 👇 Get input shape and type (e.g. [1, 224, 224, 3])
+    final inputShape = interpreter.getInputTensor(0).shape;
+    final inputType = interpreter.getInputTensor(0).type;
+
+    imageProcessor = ImageProcessorBuilder()
+        .add(ResizeOp(inputShape[1], inputShape[2], ResizeMethod.bilinear))
+        .add(NormalizeOp(127.5, 127.5)) // normalize to [-1, 1]
+        .build();
   }
 
-  Future<String> getModelPath(String asset) async {
-    final path = '${(await getApplicationSupportDirectory()).path}/$asset';
-    await Directory(dirname(path)).create(recursive: true);
-    final file = File(path);
-    if (!await file.exists()) {
-      final byteData = await rootBundle.load(asset);
-      await file.writeAsBytes(byteData.buffer
-          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-    }
-    return file.path;
+  Future<String> createObjectDetector() async {
+    await loadModel();
+    return "Done";
+    //   print("starting creation");
+    //   final modelPath = await getModelPath('assets/model_unquant.tflite');
+    //   print("path got");
+    //   final options = LocalObjectDetectorOptions(
+    //     mode: DetectionMode.stream,
+    //     modelPath: modelPath,
+    //     classifyObjects: true,
+    //     multipleObjects: false,
+    //   );
+
+    //   objectDetector = ObjectDetector(options: options);
+    //   print("detector made");
+    //   return objectDetector.id;
+    // }
+
+    // Future<String> getModelPath(String asset) async {
+    //   final path = '${(await getApplicationSupportDirectory()).path}/$asset';
+    //   await Directory(dirname(path)).create(recursive: true);
+    //   final file = File(path);
+    //   if (!await file.exists()) {
+    //     final byteData = await rootBundle.load(asset);
+    //     await file.writeAsBytes(byteData.buffer
+    //         .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+    //   }
+    //   return file.path;
   }
 
   setRecognitions(outputs) {
@@ -69,6 +91,12 @@ class _CameraPageState extends State<CameraPage> {
 
   @override
   Widget build(BuildContext context) {
+    final outputTensor = interpreter.getOutputTensor(0);
+    final outputShape = outputTensor.shape;
+    final outputType = outputTensor.type;
+
+    print('Output shape: $outputShape');
+    print('Output type: $outputType');
     return Scaffold(
       backgroundColor: Colors.orange[50],
       body: FutureBuilder<dynamic>(
