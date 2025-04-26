@@ -10,6 +10,7 @@ plugins {
 
 android {
     namespace = "com.example.sign_language_trasnlator2"
+    
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
