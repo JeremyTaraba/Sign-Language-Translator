@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sign_language_trasnlator2/utility/bottom_nav.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:sign_language_trasnlator2/utility/firebase_info.dart';
 import 'package:sign_language_trasnlator2/utility/save_credentials.dart';
 import 'package:sign_language_trasnlator2/utility/user_info.dart';
@@ -18,6 +19,16 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Settings',
+          style: GoogleFonts.lato(fontSize: 28, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.deepOrangeAccent,
+        centerTitle: true,
+        elevation: 5,
+        automaticallyImplyLeading: false,
+      ),
       body: Container(
         color: Colors.deepOrangeAccent,
         child: SafeArea(

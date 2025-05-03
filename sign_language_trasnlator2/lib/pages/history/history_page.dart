@@ -22,6 +22,7 @@ class HistoryPage extends StatelessWidget {
         backgroundColor: Colors.deepOrangeAccent,
         centerTitle: true,
         elevation: 5,
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

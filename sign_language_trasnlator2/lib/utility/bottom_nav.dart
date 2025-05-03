@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sign_language_trasnlator2/pages/camera/camera.dart';
+import 'package:sign_language_trasnlator2/pages/camera2/camera2_page';
 import 'package:sign_language_trasnlator2/pages/history/history_page.dart';
 import 'package:sign_language_trasnlator2/pages/settings/settings_page.dart';
 
@@ -19,7 +20,7 @@ class _BottomNavState extends State<BottomNav> {
     }
     if (index == 1) {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => CameraPage()));
+          context, MaterialPageRoute(builder: (context) => Camera2Page()));
     }
     if (index == 2) {
       Navigator.pushReplacement(

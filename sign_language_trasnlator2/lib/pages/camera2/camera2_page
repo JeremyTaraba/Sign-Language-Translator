@@ -1,0 +1,77 @@
+import 'package:flutter/material.dart';
+import 'package:camera/camera.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:sign_language_trasnlator2/utility/bottom_nav.dart';
+
+class Camera2Page extends StatefulWidget {
+    @override
+    _Camera2PageState createState() => _Camera2PageState();
+}
+
+class _Camera2PageState extends State<Camera2Page> {
+    CameraController? _cameraController;
+    List<CameraDescription>? _cameras;
+    String _prediction = "No predictions yet";
+
+    @override
+    void initState() {
+        super.initState();
+        _initializeCamera();
+    }
+
+    Future<void> _initializeCamera() async {
+        _cameras = await availableCameras();
+        if (_cameras != null && _cameras!.isNotEmpty) {
+            _cameraController = CameraController(
+                _cameras![0],
+                ResolutionPreset.high,
+            );
+            await _cameraController!.initialize();
+            setState(() {});
+        }
+    }
+
+    @override
+    void dispose() {
+        _cameraController?.dispose();
+        super.dispose();
+    }
+
+    @override
+    Widget build(BuildContext context) {
+        return Scaffold(
+            appBar: AppBar(
+        title: Text(
+          'Camera with Prediction',
+          style: GoogleFonts.lato(fontSize: 28, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.deepOrangeAccent,
+        centerTitle: true,
+        elevation: 5,
+        automaticallyImplyLeading: false,
+      ),
+            body: Column(
+                children: [
+                    Expanded(
+                        child: _cameraController != null && _cameraController!.value.isInitialized
+                                ? CameraPreview(_cameraController!)
+                                : Center(child: CircularProgressIndicator()),
+                    ),
+                    Container(
+                      
+                        color: Colors.black,
+                        padding: EdgeInsets.all(16.0),
+                        child: Text(
+                            _prediction,
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                            textAlign: TextAlign.center,
+                        ),
+                    ),
+                ],
+            ),
+            bottomNavigationBar: BottomNav(
+        selectedIndex: 1,
+      ),
+        );
+    }
+}
