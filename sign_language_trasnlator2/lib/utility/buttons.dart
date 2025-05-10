@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 class _RoundedButton extends StatelessWidget {
   _RoundedButton(
-      {super.key,
-      required this.backgroundColor,
+      {required this.backgroundColor,
       required this.title,
       required this.onPressed,
       required this.textColor,

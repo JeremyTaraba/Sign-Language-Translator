@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sign_language_trasnlator2/pages/camera/camera.dart';
-import 'package:sign_language_trasnlator2/pages/camera2/camera2_page';
+import 'package:sign_language_trasnlator2/pages/camera2/camera2_page.dart';
 import 'package:sign_language_trasnlator2/pages/history/history_page.dart';
 import 'package:sign_language_trasnlator2/pages/settings/settings_page.dart';
 
