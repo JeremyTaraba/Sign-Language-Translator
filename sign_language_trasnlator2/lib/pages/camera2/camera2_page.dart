@@ -60,9 +60,9 @@ class _Camera2PageState extends State<Camera2Page> {
               await imageClassificationHelper.inferenceCameraFrame(image);
           // log("Classification done");
 
-          List<String> sortedClassifications = sortClassification();
+          String topResult = sortClassification(classification);
           setState(() {
-            _prediction = classification.keys.first; // to show on screen
+            _prediction = topResult; // to show on screen
             _isProcessing = false;
           });
         },
@@ -70,7 +70,7 @@ class _Camera2PageState extends State<Camera2Page> {
     }
   }
 
-  List<String> sortClassification() {
+  String sortClassification(Map<String, double> classification) {
     sortedResults = classification.entries.toList()
       ..sort((a, b) => a.value.compareTo(b.value));
     List<String> topResults = [];
@@ -78,8 +78,8 @@ class _Camera2PageState extends State<Camera2Page> {
       topResults.add(sortedResults[i].key);
       log(sortedResults[i].value.toString() + " " + sortedResults[i].key);
     }
-
-    return topResults;
+    log("Top results: " + topResults[0].toString());
+    return topResults[0];
   }
 
   @override
