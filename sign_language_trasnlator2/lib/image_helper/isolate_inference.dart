@@ -83,14 +83,18 @@ class IsolateInference {
       // Set tensor input [1, 224, 224, 3]
       final input = [imageMatrix];
       // Set tensor output [1, 1001]
-      final output = [List<int>.filled(isolateModel.outputShape[1], 0)];
+      final output = [
+        List<double>.filled(isolateModel.outputShape[1], 0)
+      ]; // change this to int for quantized models, double for float models
       // // Run inference
       Interpreter interpreter =
           Interpreter.fromAddress(isolateModel.interpreterAddress);
       interpreter.run(input, output);
       // Get first output tensor
       final result = output.first;
-      int maxScore = result.reduce((a, b) => a + b);
+      double maxScore = result.reduce((a, b) =>
+          a +
+          b); // change this to int for quantized models, double for float models
       // Set classification map {label: points}
       var classification = <String, double>{};
       for (var i = 0; i < result.length; i++) {
