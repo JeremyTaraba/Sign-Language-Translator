@@ -74,12 +74,18 @@ class _Camera2PageState extends State<Camera2Page> {
     sortedResults = classification.entries.toList()
       ..sort((a, b) => a.value.compareTo(b.value));
     List<String> topResults = [];
-    for (int i = sortedResults.length - 1; i >= 0; i--) {
-      topResults.add(sortedResults[i].key);
-      log(sortedResults[i].value.toString() + " " + sortedResults[i].key);
+    // Get top 5 results
+    // for (int i = 0; i < 5; i++) {
+    //   if (i >= sortedResults.length) break;
+    //   topResults.add(sortedResults[i].key);
+    //   log(sortedResults[i].value.toString() + " " + sortedResults[i].key);
+    // }
+    log("Top results: ${sortedResults[0].key} with score: ${sortedResults[0].value}");
+    if (sortedResults[0].value > 0.5) {
+      return sortedResults[0].key;
+    } else {
+      return "No sign detected";
     }
-    log("Top results: " + topResults[0].toString());
-    return topResults[0];
   }
 
   @override
