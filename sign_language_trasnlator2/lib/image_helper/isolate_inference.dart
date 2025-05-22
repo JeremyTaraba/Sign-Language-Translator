@@ -87,11 +87,13 @@ class IsolateInference {
         List<double>.filled(isolateModel.outputShape[1], 0)
       ]; // change this to int for quantized models, double for float models
       // // Run inference
+
       Interpreter interpreter =
           Interpreter.fromAddress(isolateModel.interpreterAddress);
       interpreter.run(input, output);
       // Get first output tensor
       final result = output.first;
+      print("Result: $result");
       double maxScore = result.reduce((a, b) =>
           a +
           b); // change this to int for quantized models, double for float models
