@@ -17,6 +17,9 @@ class _Camera2PageState extends State<Camera2Page> {
   CameraController? _cameraController;
   List<CameraDescription>? _cameras;
   String _prediction = "No predictions yet";
+  String _previousPrediction = "";
+  int _predictionCount = 0;
+  String _predictedText = "";
 
   bool _isProcessing = false;
   late Map<String, double> classification;
@@ -61,12 +64,35 @@ class _Camera2PageState extends State<Camera2Page> {
           // log("Classification done");
 
           String topResult = sortClassification(classification);
+
           setState(() {
             _prediction = topResult; // to show on screen
             _isProcessing = false;
+            checkIfSameCharacter();
           });
         },
       );
+    }
+  }
+
+  void checkIfSameCharacter() {
+    if (_prediction == "No sign detected" ||
+        _prediction.isEmpty ||
+        _prediction == "Nothing") {
+      return; // skip processing if no valid prediction
+    }
+    if (_prediction == _previousPrediction) {
+      log("Same character detected: $_prediction");
+      _predictionCount++;
+      if (_predictionCount >= 5) {
+        log("Character $_prediction detected 5 times in a row");
+        _predictedText += _prediction; // append to predicted text
+        _predictionCount = 0; // reset count after reaching threshold
+      }
+    } else {
+      log("New character detected: $_prediction");
+      _predictionCount = 0; // reset count for new character
+      _previousPrediction = _prediction; // update previous prediction
     }
   }
 
@@ -81,11 +107,12 @@ class _Camera2PageState extends State<Camera2Page> {
     //   log(sortedResults[i].value.toString() + " " + sortedResults[i].key);
     // }
     log("Top results: ${sortedResults[0].key} with score: ${sortedResults[0].value}");
-    if (sortedResults[0].value > 0.5) {
-      return sortedResults[0].key;
-    } else {
-      return "No sign detected";
-    }
+    // if (sortedResults[0].value > 0.5) {
+    //   return sortedResults[0].key;
+    // } else {
+    //   return "No sign detected";
+    // }
+    return sortedResults[0].key; // return only the top result
   }
 
   @override
@@ -123,6 +150,14 @@ class _Camera2PageState extends State<Camera2Page> {
             child: Text(
               _prediction,
               style: TextStyle(color: Colors.white, fontSize: 18),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              "Text: $_predictedText",
+              style: TextStyle(color: Colors.black, fontSize: 18),
               textAlign: TextAlign.center,
             ),
           ),
