@@ -78,7 +78,7 @@ class _Camera2PageState extends State<Camera2Page> {
   void checkIfSameCharacter() {
     if (_prediction == "No sign detected" ||
         _prediction.isEmpty ||
-        _prediction == "Nothing") {
+        _prediction == "nothing") {
       return; // skip processing if no valid prediction
     }
     if (_prediction == _previousPrediction) {
