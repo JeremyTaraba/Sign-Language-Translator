@@ -5,10 +5,10 @@
 -DANDROID_PLATFORM=android-24
 -DANDROID_ABI=x86
 -DCMAKE_ANDROID_ARCH_ABI=x86
--DANDROID_NDK=C:\Users\jghos\AppData\Local\Android\sdk\ndk\26.3.11579264
--DCMAKE_ANDROID_NDK=C:\Users\jghos\AppData\Local\Android\sdk\ndk\26.3.11579264
--DCMAKE_TOOLCHAIN_FILE=C:\Users\jghos\AppData\Local\Android\sdk\ndk\26.3.11579264\build\cmake\android.toolchain.cmake
--DCMAKE_MAKE_PROGRAM=C:\Users\jghos\AppData\Local\Android\sdk\cmake\3.22.1\bin\ninja.exe
+-DANDROID_NDK=C:\Users\jghos\AppData\Local\Android\Sdk\ndk\26.3.11579264
+-DCMAKE_ANDROID_NDK=C:\Users\jghos\AppData\Local\Android\Sdk\ndk\26.3.11579264
+-DCMAKE_TOOLCHAIN_FILE=C:\Users\jghos\AppData\Local\Android\Sdk\ndk\26.3.11579264\build\cmake\android.toolchain.cmake
+-DCMAKE_MAKE_PROGRAM=C:\Users\jghos\AppData\Local\Android\Sdk\cmake\3.22.1\bin\ninja.exe
 -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=C:\Users\jghos\Documents\GitHub\Sign-Language-Translator\sign_language_trasnlator2\build\app\intermediates\cxx\Debug\596ie1c1\obj\x86
 -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=C:\Users\jghos\Documents\GitHub\Sign-Language-Translator\sign_language_trasnlator2\build\app\intermediates\cxx\Debug\596ie1c1\obj\x86
 -DCMAKE_BUILD_TYPE=Debug

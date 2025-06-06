@@ -1,0 +1,2 @@
+C:/Users/jghos/Documents/GitHub/Sign-Language-Translator/sign_language_trasnlator2/android/app/.cxx/RelWithDebInfo/4d5g6hi5/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/jghos/Documents/GitHub/Sign-Language-Translator/sign_language_trasnlator2/android/app/.cxx/RelWithDebInfo/4d5g6hi5/armeabi-v7a/CMakeFiles/rebuild_cache.dir

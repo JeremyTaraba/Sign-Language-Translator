@@ -48,27 +48,37 @@ class _SettingsPageState extends State<SettingsPage> {
                     child: Align(
                       alignment: Alignment.bottomCenter,
                       child: ElevatedButton(
-                          onPressed: () {
-                            auth.signOut();
-                            deleteLoginCredentials();
-                            Navigator.pop(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 255, 255, 255),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 20,
-                            ),
+                        onPressed: () {
+                          auth.signOut();
+                          deleteLoginCredentials();
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20,
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Logout",
-                              style: TextStyle(
-                                  fontSize: 40, color: Colors.deepOrange),
-                            ),
-                          )),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Logout",
+                            style: TextStyle(fontSize: 40, color: Colors.deepOrange),
+                          ),
+                        ),
+                      ),
                     ),
+                  ),
+                  Spacer(),
+                  Center(
+                    child: Text(
+                      "ASL Alphabet",
+                      style: TextStyle(fontSize: 24),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset("images/asl-alphabet.png"),
                   )
                 ],
               ),
@@ -103,8 +113,7 @@ class _SettingsPageState extends State<SettingsPage> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                    color: const Color.fromARGB(255, 95, 35, 15), width: 2),
+                border: Border.all(color: const Color.fromARGB(255, 95, 35, 15), width: 2),
               ),
               child: Center(
                 child: Text(

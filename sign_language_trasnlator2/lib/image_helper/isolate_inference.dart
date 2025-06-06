@@ -32,8 +32,7 @@ class IsolateInference {
   SendPort get sendPort => _sendPort;
 
   Future<void> start() async {
-    _isolate = await Isolate.spawn<SendPort>(entryPoint, _receivePort.sendPort,
-        debugName: _debugName);
+    _isolate = await Isolate.spawn<SendPort>(entryPoint, _receivePort.sendPort, debugName: _debugName);
     _sendPort = await _receivePort.first;
   }
 
@@ -71,11 +70,7 @@ class IsolateInference {
           imageInput.width,
           (x) {
             final pixel = imageInput.getPixel(x, y);
-            return [
-              pixel & 0xff,
-              pixel >> 8 & 0xff,
-              pixel >> 8 * 2 & 0xff
-            ]; // [red, green, blue]
+            return [pixel & 0xff, pixel >> 8 & 0xff, pixel >> 8 * 2 & 0xff]; // [red, green, blue]
           },
         ),
       );
@@ -83,27 +78,21 @@ class IsolateInference {
       // Set tensor input [1, 224, 224, 3]
       final input = [imageMatrix];
       // Set tensor output [1, 1001]
-      final output = [
-        List<double>.filled(isolateModel.outputShape[1], 0)
-      ]; // change this to int for quantized models, double for float models
+      final output = [List<int>.filled(isolateModel.outputShape[1], 0)]; // change this to int for quantized models, double for float models
       // // Run inference
 
-      Interpreter interpreter =
-          Interpreter.fromAddress(isolateModel.interpreterAddress);
+      Interpreter interpreter = Interpreter.fromAddress(isolateModel.interpreterAddress);
       interpreter.run(input, output);
       // Get first output tensor
       final result = output.first;
       print("Result: $result");
-      double maxScore = result.reduce((a, b) =>
-          a +
-          b); // change this to int for quantized models, double for float models
+      int maxScore = result.reduce((a, b) => a + b); // change this to int for quantized models, double for float models
       // Set classification map {label: points}
       var classification = <String, double>{};
       for (var i = 0; i < result.length; i++) {
         if (result[i] != 0) {
           // Set label: points
-          classification[isolateModel.labels[i]] =
-              result[i].toDouble() / maxScore.toDouble();
+          classification[isolateModel.labels[i]] = result[i].toDouble() / maxScore.toDouble();
         }
       }
       isolateModel.responsePort.send(classification);
@@ -120,8 +109,7 @@ class InferenceModel {
   List<int> outputShape;
   late SendPort responsePort;
 
-  InferenceModel(this.cameraImage, this.image, this.interpreterAddress,
-      this.labels, this.inputShape, this.outputShape);
+  InferenceModel(this.cameraImage, this.image, this.interpreterAddress, this.labels, this.inputShape, this.outputShape);
 
   // check if it is camera frame or still image
   bool isCameraFrame() {

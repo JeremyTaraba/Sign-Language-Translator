@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sign_language_trasnlator2/utility/user_info.dart';
 
 final _firestore = FirebaseFirestore.instance; //for the database
 final auth = FirebaseAuth.instance;
@@ -27,6 +28,7 @@ Future<String> getCurrentUsername() async {
     if (user != null) {
       loggedInUser = user; // gets the logged in user
     }
+    user_email = loggedInUser.email!;
 
     //for getting the username
     var docRef = _firestore.collection('profile_info').doc(loggedInUser.email);

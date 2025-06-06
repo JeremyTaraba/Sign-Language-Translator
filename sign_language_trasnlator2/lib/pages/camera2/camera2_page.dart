@@ -1,12 +1,16 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sign_language_trasnlator2/image_helper/image_classification_helper.dart';
 import 'package:sign_language_trasnlator2/utility/bottom_nav.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+
+import '../../utility/firebase_info.dart';
+
+final _firestore = FirebaseFirestore.instance; //for the database
 
 class Camera2Page extends StatefulWidget {
   @override
@@ -59,8 +63,7 @@ class _Camera2PageState extends State<Camera2Page> {
 
           // log("Attempting classification");
           // using image_classification_helper to do all the work, model setup and loading labels is done in that file
-          classification =
-              await imageClassificationHelper.inferenceCameraFrame(image);
+          classification = await imageClassificationHelper.inferenceCameraFrame(image);
           // log("Classification done");
 
           String topResult = sortClassification(classification);
@@ -76,9 +79,7 @@ class _Camera2PageState extends State<Camera2Page> {
   }
 
   void checkIfSameCharacter() {
-    if (_prediction == "No sign detected" ||
-        _prediction.isEmpty ||
-        _prediction == "nothing") {
+    if (_prediction == "No sign detected" || _prediction.isEmpty || _prediction == "nothing") {
       return; // skip processing if no valid prediction
     }
     if (_prediction == _previousPrediction) {
@@ -97,9 +98,8 @@ class _Camera2PageState extends State<Camera2Page> {
   }
 
   String sortClassification(Map<String, double> classification) {
-    sortedResults = classification.entries.toList()
-      ..sort((a, b) => a.value.compareTo(b.value));
-    List<String> topResults = [];
+    sortedResults = classification.entries.toList()..sort((a, b) => a.value.compareTo(b.value));
+    // List<String> topResults = [];
     // Get top 5 results
     // for (int i = 0; i < 5; i++) {
     //   if (i >= sortedResults.length) break;
@@ -107,12 +107,12 @@ class _Camera2PageState extends State<Camera2Page> {
     //   log(sortedResults[i].value.toString() + " " + sortedResults[i].key);
     // }
     log("Top results: ${sortedResults[0].key} with score: ${sortedResults[0].value}");
-    // if (sortedResults[0].value > 0.5) {
-    //   return sortedResults[0].key;
-    // } else {
-    //   return "No sign detected";
-    // }
-    return sortedResults[0].key; // return only the top result
+    if (sortedResults[0].value > 0.02) {
+      return sortedResults[0].key;
+    } else {
+      return "nothing";
+    }
+    // return sortedResults[0].key; // return only the top result
   }
 
   @override
@@ -139,8 +139,7 @@ class _Camera2PageState extends State<Camera2Page> {
       body: Column(
         children: [
           Expanded(
-            child: _cameraController != null &&
-                    _cameraController!.value.isInitialized
+            child: _cameraController != null && _cameraController!.value.isInitialized
                 ? CameraPreview(_cameraController!)
                 : Center(child: CircularProgressIndicator()),
           ),
@@ -153,19 +152,59 @@ class _Camera2PageState extends State<Camera2Page> {
               textAlign: TextAlign.center,
             ),
           ),
-          Container(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              "Text: $_predictedText",
-              style: TextStyle(color: Colors.black, fontSize: 18),
-              textAlign: TextAlign.center,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Text: ",
+                style: TextStyle(color: Colors.black, fontSize: 18),
+              ),
+              Expanded(
+                child: AutoSizeText(
+                  _predictedText,
+                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              TextButton(
+                onPressed: () async {
+                  // send text to firebase and clear text
+                  await sendTextToFirebase();
+                },
+                child: Text(
+                  "Save",
+                  style: TextStyle(fontSize: 18),
+                ),
+              )
+            ],
           ),
         ],
       ),
       bottomNavigationBar: BottomNav(
         selectedIndex: 1,
       ),
+    );
+  }
+
+  Future<void> sendTextToFirebase() async {
+    if (_predictedText == "") {
+      return;
+    }
+    try {
+      Map<String, String> data = {DateTime.now().toString().split(" ")[1]: _predictedText};
+      await setTextDatabase(data);
+      _predictedText = "";
+
+      // data is in the form of {date:Map} -> Map = {time:text}
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<void> setTextDatabase(Map<String, String> data) async {
+    await _firestore.collection('chat_history').doc(loggedInUser.email).set(
+      {DateTime.now().toString().split(" ")[0]: data},
+      SetOptions(merge: true),
     );
   }
 }

@@ -21,7 +21,7 @@ if (keystorePropertiesFile.exists()) {
 
 
 android {
-    namespace = "com.codingminds.silenttalk"
+    namespace = "com.example.sign_language_trasnlator2"
     
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
@@ -55,7 +55,7 @@ android {
         create("release") {
             keyAlias = keystoreProperties["keyAlias"] as String
             keyPassword = keystoreProperties["keyPassword"] as String
-            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
             storePassword = keystoreProperties["storePassword"] as String
         }
     }
@@ -69,4 +69,8 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation "org.tensorflow:tensorflow-lite-gpu-api:2.12.0"
 }

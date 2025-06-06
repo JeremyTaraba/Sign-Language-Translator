@@ -42,11 +42,7 @@ class _LoginPageState extends State<LoginPage> {
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,
                     stops: [0.1, 0.3, 0.5],
-                    colors: [
-                      Color.fromARGB(255, 252, 92, 23),
-                      Color.fromARGB(255, 255, 162, 122),
-                      Color.fromARGB(255, 255, 193, 166)
-                    ],
+                    colors: [Color.fromARGB(255, 252, 92, 23), Color.fromARGB(255, 255, 162, 122), Color.fromARGB(255, 255, 193, 166)],
                   ),
                 ),
               ),
@@ -71,16 +67,13 @@ class _LoginPageState extends State<LoginPage> {
                 child: AnimatedContainer(
                   decoration: const BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(50),
-                        topLeft: Radius.circular(50)),
+                    borderRadius: BorderRadius.only(topRight: Radius.circular(50), topLeft: Radius.circular(50)),
                   ),
                   duration: const Duration(seconds: 2),
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(
-                            left: 12.0, right: 12.0, bottom: 25, top: 50),
+                        padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 25, top: 50),
                         child: TextField(
                           textAlign: TextAlign.center,
                           onChanged: (value) {
@@ -89,13 +82,11 @@ class _LoginPageState extends State<LoginPage> {
                           style: kTextFieldFont(),
                           autocorrect: false,
                           keyboardType: TextInputType.emailAddress,
-                          decoration: kTextFieldDecoration()
-                              .copyWith(hintText: "Email"),
+                          decoration: kTextFieldDecoration().copyWith(hintText: "Email"),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(
-                            left: 12.0, right: 12.0, bottom: 25.0),
+                        padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 25.0),
                         child: TextField(
                           textAlign: TextAlign.center,
                           onChanged: (value) {
@@ -105,8 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                           autocorrect: false,
                           obscureText: true,
                           keyboardType: TextInputType.text,
-                          decoration: kTextFieldDecoration()
-                              .copyWith(hintText: "Password"),
+                          decoration: kTextFieldDecoration().copyWith(hintText: "Password"),
                         ),
                       ),
                       LoginButton(onPressed: () async {
@@ -115,19 +105,16 @@ class _LoginPageState extends State<LoginPage> {
                         });
 
                         try {
-                          final user = await _auth.signInWithEmailAndPassword(
-                              email: email, password: password);
+                          final user = await _auth.signInWithEmailAndPassword(email: email, password: password);
                           if (user == null) {
                             return;
                           }
 
                           user_Info_Name = await getCurrentUsername();
+
                           saveLoginCredentials(email, password);
 
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HistoryPage()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryPage()));
                         } catch (e) {
                           mySnackBar(e.toString().split(']')[1], context);
                         }
@@ -139,14 +126,11 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.all(15.0),
                         child: GestureDetector(
                           onTap: () {
-                            mySnackBar(
-                                "Please email management team to reset your password",
-                                context);
+                            mySnackBar("Please email management team to reset your password", context);
                           },
                           child: const Text(
                             "Forgot password?",
-                            style: TextStyle(
-                                color: Colors.deepOrangeAccent, fontSize: 20),
+                            style: TextStyle(color: Colors.deepOrangeAccent, fontSize: 20),
                           ),
                         ),
                       ),
@@ -164,11 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                RegisterPage()));
+                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegisterPage()));
                                   },
                                   child: const Text(
                                     "Sign up",

@@ -46,6 +46,7 @@ dependencies:
   camera: ^0.10.4
   tflite_flutter_helper_plus: ^0.0.2
   image_picker: ^1.1.2
+  auto_size_text: ^3.0.0
   
 
 dev_dependencies:
@@ -80,7 +81,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
-  #   - images/a_dot_ham.jpeg
+    - images/asl-alphabet.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
